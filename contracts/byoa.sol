@@ -50,7 +50,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         _setTokenURI(_tokenId, apps[_appId].tokenURI);
     }
 
-    function createApp(string memory name, string memory description, uint256 price, string memory tokenURI) public returns (uint256 appId) {
+    function createApp(string memory name, string memory description, uint256 price, string memory _tokenURI) public returns (uint256) {
         require(hasRole(DEVELOPER_ROLE, msg.sender), "Must be a developer to create an app");
         _byoaAppIds.increment();
         uint256 _appId = _byoaAppIds.current();
@@ -60,14 +60,14 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
             name: name,
             description: description,
             price: price,
-            tokenURI: tokenURI,
+            tokenURI: _tokenURI,
             owner: msg.sender
         });
 
         return _appId;
     }
 
-    function updateApp(uint256 appId, string memory name, string memory description, uint256 price, string memory tokenURI) public returns (uint256 _appId) {
+    function updateApp(uint256 appId, string memory name, string memory description, uint256 price, string memory _tokenURI) public returns (uint256) {
         require(hasRole(DEVELOPER_ROLE, msg.sender), "Must be a developer to create an app");
         require(apps[appId].id != 0, "App ID must exist");
 
@@ -79,7 +79,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
             name: name,
             description: description,
             price: price,
-            tokenURI: tokenURI,
+            tokenURI: _tokenURI,
             owner: msg.sender
         });
 

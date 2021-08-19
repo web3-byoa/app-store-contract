@@ -6,9 +6,11 @@
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.5",
-    "hardhat": "^2.6.0"
+    "hardhat": "^2.6.0",
+    "ts-node": "^10.2.1"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^2.1.5",
     "@openzeppelin/contracts": "^4.3.0"
   }
 }

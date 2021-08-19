@@ -21,6 +21,7 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
 export default {
   solidity: "0.8.6",
   networks: {
+    /*
   	ropsten: {
   		url: `https://eth-ropsten.alchemyapi.io/v2/Uo717K-DDAxlSM5gXM-zgv678k0aMZH5`,
   		accounts: [``],
@@ -37,6 +38,7 @@ export default {
       gas: 4712388,
       gasPrice: 100000000000,
     }
+    */
   },
   etherscan: {
     // Your API key for Etherscan
