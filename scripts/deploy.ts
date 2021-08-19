@@ -12,7 +12,7 @@ async function main() {
 
 	console.log("Account balance:", (await deployer.getBalance()).toString());
 
-	const MallowsByoa = await ethers.getContractFactory("Byoa V1");
+	const MallowsByoa = await ethers.getContractFactory("Byoa");
 	const contract = await MallowsByoa.deploy();
 
 	console.log("Contract deployed at:", contract.address);
