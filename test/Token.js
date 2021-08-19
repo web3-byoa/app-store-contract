@@ -115,17 +115,41 @@ describe("Token contract", function () {
 
   describe("Minting Functionalities", () => {
     it("Should fail to mint with a bad appid", async () => {
-
+        await expect(hardhatToken.connect(addr1).mint(1)).to.be.revertedWith('App ID must exist');
     });
 
     it("Should mint a byoa with a valid app id to a user", async () => {
+        await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
 
+        await expect(hardhatToken.connect(addr1).mint(2)).to.be.not.reverted;
+        await expect(hardhatToken.connect(addr2).mint(1)).to.be.not.reverted;
+
+        let firstMint = await hardhatToken.getAppIdByTokenId(1);
+        expect(firstMint).equals(2);
+
+        let secondMint = await hardhatToken.getAppIdByTokenId(2);
+        expect(secondMint).equals(1);
     });
   });
 
   describe("Transfers", () => {
       it("Should allow a user to transfer to another user", async () => {
+        await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
 
+        await expect(hardhatToken.connect(addr1).mint(2)).to.be.not.reverted;
+        await expect(hardhatToken.connect(addr2).mint(1)).to.be.not.reverted;
+
+        await hardhatToken.connect(addr1).transferFrom(addr1.address, addr2.address, 1);
+
+        let res = await hardhatToken.walletOfOwner(addr2.address);
+        expect(res.length).equals(2);
+
+        let res2 = await hardhatToken.walletOfOwner(addr1.address);
+        expect(res2.length).equals(0);
       });
   })
 });

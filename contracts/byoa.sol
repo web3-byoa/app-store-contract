@@ -32,6 +32,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
 
     // Mapping AppIds to the App
     mapping (uint256 => App) apps;
+    mapping (uint256 => uint256) nftsToAppIds;
 
     constructor() ERC721("Byoa V1", "BYOA_V1") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -46,8 +47,13 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         uint256 _tokenId = totalSupply + 1;
         _safeMint(msg.sender, _tokenId);
         require(_exists(_tokenId));
+        nftsToAppIds[_tokenId] = _appId;
         // Set the tokenURI to the URI specified by the App
         _setTokenURI(_tokenId, apps[_appId].tokenURI);
+    }
+
+    function getAppIdByTokenId(uint256 _tokenId) public view returns (uint256) {
+        return nftsToAppIds[_tokenId];
     }
 
     function createApp(string memory name, string memory description, uint256 price, string memory _tokenURI) public returns (uint256) {
