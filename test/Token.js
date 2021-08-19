@@ -70,15 +70,46 @@ describe("Token contract", function () {
    });
 
    it("Should only allow developers to create an app", async () => {
+    await expect(hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.revertedWith('Must be a developer to create an app');
 
+    await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+    hasRole = await hardhatToken.hasRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address)
+    expect(hasRole).to.equal(true);
+
+    await expect(hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.not.reverted;    
    });
 
    it("Should create a new app", async () => {
+    await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+    hasRole = await hardhatToken.hasRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+    expect(hasRole).to.equal(true);
 
+    const appId = await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+    await appId.wait();
+    const appId2 = await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await appId2.wait();
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog/2");
+    
+    let ids = await hardhatToken.getAppIds();
+    expect(ids.length).to.be.eq(8);
    });
 
    it("Should update app details", async () => {
+        await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+        await hardhatToken.connect(addr1).createApp("name 2", "desc 2", 0, "ipfs://dog2");
+        
+        await hardhatToken.connect(addr1).updateApp(2, "name 2 updated", "desc 2 updated", 0, "ipfs://dog/2");
 
+        let details = await hardhatToken.connect(addr1).getAppDetailsById(2);
+        expect(details.name).equals("name 2 updated");
+        expect(details.description).equals("desc 2 updated");
+        expect(details._tokenURI).equals("ipfs://dog/2");
    });
   });
 

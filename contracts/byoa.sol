@@ -120,8 +120,8 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
 
     function getAppIds() public view returns (uint256[] memory) {
         uint256[] memory appIds = new uint256[](_byoaAppIds.current());
-        for (uint256 i; i < _byoaAppIds.current(); i ++) {
-            appIds[i] = i;
+        for (uint256 i=1; i <= _byoaAppIds.current(); i ++) {
+            appIds[i-1] = i;
         }
         return appIds;
     }

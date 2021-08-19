@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/pagreczner/src/mallows/contracts/app-store/contracts/byoa.sol": {
-      "lastModificationDate": 1629395926751,
-      "contentHash": "4eda4c7df006c7fa17d64f985c6b7ae6",
+      "lastModificationDate": 1629401635952,
+      "contentHash": "40ee06b5e5ce3278068f8d917ec15c6a",
       "sourceName": "contracts/byoa.sol",
       "solcConfig": {
         "version": "0.8.6",
