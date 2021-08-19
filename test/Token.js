@@ -111,6 +111,14 @@ describe("Token contract", function () {
         expect(details.description).equals("desc 2 updated");
         expect(details._tokenURI).equals("ipfs://dog/2");
    });
+
+   it("Should only allow the creating developer to update", async () => {
+        await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+        await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr2.address);
+        await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+        await expect(hardhatToken.connect(addr2).updateApp(1, "name 1 updated", "desc 1 updated", 0, "ipfs://dog/1")).to.be.reverted;
+        await expect(hardhatToken.connect(addr1).updateApp(1, "name 1 updated", "desc 1 updated", 0, "ipfs://dog/1")).to.be.not.reverted;
+   });
   });
 
   describe("Minting Functionalities", () => {
