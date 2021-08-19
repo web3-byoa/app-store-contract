@@ -67,7 +67,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         return _appId;
     }
 
-    function updateApp(uint256 appId, string memory name, string memory description, uint256 price, string memory tokenURI) public returns (uint256 appId) {
+    function updateApp(uint256 appId, string memory name, string memory description, uint256 price, string memory tokenURI) public returns (uint256 _appId) {
         require(hasRole(DEVELOPER_ROLE, msg.sender), "Must be a developer to create an app");
         require(apps[appId].id != 0, "App ID must exist");
 
@@ -84,6 +84,19 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         });
 
         return appId;
+    }
+
+    function getAppDetailsById(uint256 appId) public view returns (
+        string memory name, 
+        string memory description, 
+        string memory _tokenURI, 
+        address owner, 
+        uint256 price
+    ) {
+        require(apps[appId].id != 0, "App ID must exist");
+
+        App memory _app = apps[appId];
+        return (_app.name, _app.description, _app.tokenURI, _app.owner, _app.price);
     }
    
     function walletOfOwner(address _owner)
@@ -103,6 +116,14 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
             tokensId[i] = tokenOfOwnerByIndex(_owner, i);
         }
         return tokensId;
+    }
+
+    function getAppIds() public view returns (uint256[] memory) {
+        uint256[] memory appIds = new uint256[](_byoaAppIds.current());
+        for (uint256 i; i < _byoaAppIds.current(); i ++) {
+            appIds[i] = i;
+        }
+        return appIds;
     }
 
     function withdrawAll() public payable {
