@@ -33,6 +33,8 @@ await t.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROL
 # Run this as many times as desired and changing the app parameters each time
 await t.connect(addr1).createApp("Uniswap Chart Enhancer", "This app provides an enhanced experience when using the uniswap.v3 application. You'll get access to additional charts and real time data while trying to make your trades. While it is meant for use with uniswap.v3, you can bring this app to any web3 byoa compatible web page.", 0, "ipfs://jdfiojiosdfjisdofjsfd");
 
+# You'll want to set the token URI to an actual URI when developing the BYOA functionality. This can be changed at any time using the updateApp contract endpoint.
+
 # Send your local metamask some ether
 await addr1.sendTransaction({to: '0x<REPLACE_ME>', value: ethers.utils.parseUnits('5', 'ether').toHexString()})
 ```
