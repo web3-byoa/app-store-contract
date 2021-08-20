@@ -39,6 +39,16 @@ export default {
       gasPrice: 100000000000,
     }
     */
+   hardhat: {
+     chainId: 1337
+   },
+   localhost: {
+     chainId: 1337,
+     mining: {
+      auto: false,
+      interval: [3000, 6000]
+    }
+   }
   },
   etherscan: {
     // Your API key for Etherscan
