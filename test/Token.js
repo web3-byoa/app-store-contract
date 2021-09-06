@@ -142,6 +142,41 @@ describe("Token contract", function () {
     });
   });
 
+  describe("Token Preferences", () => {
+
+    let appId;
+    beforeEach( async () => {
+      await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
+      appId = await hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog");
+      appId.wait();
+      await expect(hardhatToken.connect(addr1).mint(1)).to.not.be.reverted;
+    });
+
+
+    it("Should allow you to set token preferences", async () => {
+      let keys = await hardhatToken.connect(addr1).getPreferencesKeys(1);
+      expect(keys.length).to.be.equal(0);
+
+      await hardhatToken.connect(addr1).updatePreferences(1, "symbol1", "ETH");
+      await hardhatToken.connect(addr1).updatePreferences(1, "symbol2", "BTC");
+
+      keys = await hardhatToken.connect(addr1).getPreferencesKeys(1);
+      expect(keys.length).to.be.equal(2);
+
+      let s1 = await hardhatToken.getPreferenceByKey(1, "symbol1");
+      let s2 = await hardhatToken.getPreferenceByKey(1, "symbol2");
+      expect(s1).to.equal("ETH");
+      expect(s2).to.equal("BTC");
+
+      let s3 = await hardhatToken.getPreferenceByKey(1, "symbol3");
+      expect(s3).to.equal("");
+
+      await hardhatToken.connect(addr1).updatePreferences(1, "symbol1", "DOG");
+      let s4 = await hardhatToken.getPreferenceByKey(1, "symbol1");
+      expect(s4).to.equal("DOG");
+    });
+  });
+
   describe("Transfers", () => {
       it("Should allow a user to transfer to another user", async () => {
         await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);

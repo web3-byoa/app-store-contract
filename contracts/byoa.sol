@@ -31,11 +31,38 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
     }
 
     // Mapping AppIds to the App
-    mapping (uint256 => App) apps;
-    mapping (uint256 => uint256) nftsToAppIds;
+    mapping (uint256 => App) private apps;
+    mapping (uint256 => uint256) private nftsToAppIds;
+    mapping (uint256 => mapping (string => string)) private tokenIdPreferencesMap;
+    mapping (uint256 => string[]) private tokenIdPreferenceKeys;
 
     constructor() ERC721("Byoa V1", "BYOA_V1") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function compareStrings(string memory a, string memory b) public view returns (bool) {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+
+    function updatePreferences(uint256 _tokenID, string memory key, string memory value) public {
+        require(_exists(_tokenID), "Token ID must exist");
+        require(ownerOf(_tokenID) == msg.sender, "The owner must be the one attempting the update");
+        tokenIdPreferencesMap[_tokenID][key] = value;
+        string[] memory keys = tokenIdPreferenceKeys[_tokenID];
+        for (uint256 i = 0; i < keys.length; i ++) {
+            if (compareStrings(keys[i],key)) return;
+        }
+        tokenIdPreferenceKeys[_tokenID].push(key);
+    }
+
+    function getPreferencesKeys(uint256 _tokenId) public view returns (string[] memory) {
+        require(_exists(_tokenId), "Token ID must exist to get preferences");
+        return tokenIdPreferenceKeys[_tokenId];
+    }
+
+    function getPreferenceByKey(uint256 _tokenId, string memory key) public view returns (string memory) {
+        require(_exists(_tokenId), "Token ID must exist to get preferences");
+        return tokenIdPreferencesMap[_tokenId][key];
     }
 
     function mint(uint256 _appId) public payable {
