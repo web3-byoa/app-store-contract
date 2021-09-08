@@ -15,6 +15,7 @@ async function main() {
 	const MallowsByoa = await ethers.getContractFactory("Byoa");
 	const contract = await MallowsByoa.deploy();
 
+	console.log(contract);
 	console.log("Contract deployed at:", contract.address);
 }
 
