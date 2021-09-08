@@ -17,6 +17,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
 
     // Role for developers to be able to mint apps
     bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
+    bool private _requireDeveloperOnboarding = true;
 
     uint256 private _defaultPrice = 4 * 10**16; // This is currently .04 eth
 
@@ -28,7 +29,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         uint256 price;
         string tokenURI;
         address owner;
-    }
+    } // optional developer approval
 
     // Mapping AppIds to the App
     mapping (uint256 => App) private apps;
@@ -84,7 +85,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
     }
 
     function createApp(string memory name, string memory description, uint256 price, string memory _tokenURI) public returns (uint256) {
-        require(hasRole(DEVELOPER_ROLE, msg.sender), "Must be a developer to create an app");
+        require(hasRole(DEVELOPER_ROLE, msg.sender) || (_requireDeveloperOnboarding == false), "Must be a developer to create an app");
         _byoaAppIds.increment();
         uint256 _appId = _byoaAppIds.current();
 
@@ -130,6 +131,11 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
 
         App memory _app = apps[appId];
         return (_app.name, _app.description, _app.tokenURI, _app.owner, _app.price);
+    }
+
+    function setDeveloperOnboarding(bool _shouldOnboard) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Must be an admin to set developer onboarding");
+        _requireDeveloperOnboarding = _shouldOnboard;
     }
    
     function walletOfOwner(address _owner)

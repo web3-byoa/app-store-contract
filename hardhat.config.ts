@@ -21,13 +21,13 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
 export default {
   solidity: "0.8.6",
   networks: {
-    /*
+    
   	ropsten: {
-  		url: `https://eth-ropsten.alchemyapi.io/v2/Uo717K-DDAxlSM5gXM-zgv678k0aMZH5`,
+  		url: `https://eth-ropsten.alchemyapi.io/v2/N9hhfuCL7V9y5dXCD5AOddGs-zVIyYc4`,
   		accounts: [``],
       gas: 4712388,
       gasPrice: 8000000000,
-  	},
+  	},/*
     rinkeby: {
       url: 'https://eth-rinkeby.alchemyapi.io/v2/BOVIKDhtoiCIF42wVvj8LoaXF-Hictde',
       accounts: [``]
@@ -56,3 +56,7 @@ export default {
     apiKey: "8523JTUFNSHVP2F6HIN7BS1DJSWU4XJHDM"
   }
 };
+
+// Ropsten: 0xD3CFd6dDd98b8245C849D0f845ddC0b6Ce2E01e3
+
+// Ryan: 0xEfC68770C656dD21c5DedDa68a0AE65403a0bdfc

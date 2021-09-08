@@ -30,7 +30,7 @@ describe("Token contract", function () {
   beforeEach(async function () {
     // Get the ContractFactory and Signers here.
     Token = await ethers.getContractFactory("Byoa");
-    [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+    [owner, addr1, addr2, addr3, ...addrs] = await ethers.getSigners();
 
     // To deploy our contract, we just have to call Token.deploy() and await
     // for it to be deployed(), which happens onces its transaction has been
@@ -78,6 +78,12 @@ describe("Token contract", function () {
 
     await expect(hardhatToken.connect(addr1).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.not.reverted;    
    });
+
+   it("Should allow anyone to create an app if onboarding is disabled", async () => {
+    await expect(hardhatToken.connect(addr3).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.revertedWith("Must be a developer to create an app");    
+    await expect(hardhatToken.connect(owner).setDeveloperOnboarding(false)).to.be.not.reverted;
+    await expect(hardhatToken.connect(addr3).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.not.reverted;    
+   })
 
    it("Should create a new app", async () => {
     await hardhatToken.grantRole(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DEVELOPER_ROLE")), addr1.address);
@@ -194,5 +200,12 @@ describe("Token contract", function () {
         let res2 = await hardhatToken.walletOfOwner(addr1.address);
         expect(res2.length).equals(0);
       });
+  });
+
+  describe("Developer onboarding", () => {
+    it("Should require you to be an admin to change the settings", async () => {
+      await expect(hardhatToken.connect(owner).setDeveloperOnboarding(false)).to.be.not.reverted;
+      await expect(hardhatToken.connect(addr1).setDeveloperOnboarding(false)).to.be.revertedWith("Must be an admin to set developer onboarding");
+    })
   })
 });
