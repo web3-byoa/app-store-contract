@@ -22,7 +22,7 @@ npx hardhat console --network localhost
 ```
 [owner, addr1, addr2] = await ethers.getSigners();
 Token = await ethers.getContractFactory("Byoa");
-let t = await Token.deploy();
+let t = await Token.attach(`<contract-address>`);
 
 # Set the following as the byoaContractAddress in App.tsx (see SPA app-store documentation)
 console.log(await t.address)
@@ -41,3 +41,4 @@ await addr1.sendTransaction({to: '0x<REPLACE_ME>', value: ethers.utils.parseUnit
 
 ## Running Tests
 `npx hardhat test`
+
