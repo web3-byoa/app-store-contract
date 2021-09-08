@@ -7,8 +7,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-
-
 pragma solidity ^0.8.0;
 
 contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
@@ -18,8 +16,6 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
     // Role for developers to be able to mint apps
     bytes32 public constant DEVELOPER_ROLE = keccak256("DEVELOPER_ROLE");
     bool private _requireDeveloperOnboarding = true;
-
-    uint256 private _defaultPrice = 4 * 10**16; // This is currently .04 eth
 
     // Need a type to hold multiple types of byoa
     struct App {
@@ -42,7 +38,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function compareStrings(string memory a, string memory b) public view returns (bool) {
+    function compareStrings(string memory a, string memory b) public pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
