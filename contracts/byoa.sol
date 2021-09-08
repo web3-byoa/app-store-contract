@@ -29,10 +29,11 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         uint256 price;
         string tokenURI;
         address owner;
-    } // optional developer approval
+    } 
 
     // Mapping AppIds to the App
     mapping (uint256 => App) private apps;
+    mapping (uint256 => bool) private approvalsByAppId;
     mapping (uint256 => uint256) private nftsToAppIds;
     mapping (uint256 => mapping (string => string)) private tokenIdPreferencesMap;
     mapping (uint256 => string[]) private tokenIdPreferenceKeys;
@@ -88,6 +89,7 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         require(hasRole(DEVELOPER_ROLE, msg.sender) || (_requireDeveloperOnboarding == false), "Must be a developer to create an app");
         _byoaAppIds.increment();
         uint256 _appId = _byoaAppIds.current();
+        approvalsByAppId[_appId] = true;
 
         apps[_appId] = App({
             id: _appId,
@@ -99,6 +101,15 @@ contract Byoa is ERC721Enumerable, AccessControl, ERC721URIStorage {
         });
 
         return _appId;
+    }
+
+    function setApprovalByAppId(uint256 _appId, bool _appr) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Must be an admin to change any approvals");
+        approvalsByAppId[_appId] = _appr;
+    }
+
+    function getApprovalByAppId(uint256 _appId) public view returns (bool) {
+        return approvalsByAppId[_appId];
     }
 
     function updateApp(uint256 appId, string memory name, string memory description, uint256 price, string memory _tokenURI) public returns (uint256) {

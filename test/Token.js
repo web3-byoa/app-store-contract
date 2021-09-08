@@ -207,5 +207,19 @@ describe("Token contract", function () {
       await expect(hardhatToken.connect(owner).setDeveloperOnboarding(false)).to.be.not.reverted;
       await expect(hardhatToken.connect(addr1).setDeveloperOnboarding(false)).to.be.revertedWith("Must be an admin to set developer onboarding");
     })
+  });
+
+  describe("Approval functionality", () => {
+    it("Should set approvals", async () => {
+      await expect(hardhatToken.connect(owner).setDeveloperOnboarding(false)).to.be.not.reverted;
+      await expect(hardhatToken.connect(addr3).createApp("name 1", "desc 1", 0, "ipfs://dog")).to.be.not.reverted;    
+      let approval1 = await hardhatToken.getApprovalByAppId(1);
+      expect(approval1).to.be.true;
+      await expect(hardhatToken.connect(owner).setApprovalByAppId(1, false)).to.be.not.reverted;
+      await expect(hardhatToken.connect(addr3).setApprovalByAppId(1, false)).to.be.revertedWith("Must be an admin to change any approvals");
+      approval1 = await hardhatToken.getApprovalByAppId(1);
+      expect(approval1).to.be.false;
+    });
+
   })
 });
