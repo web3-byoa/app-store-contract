@@ -31,22 +31,11 @@ export default {
   networks: {
     
   	ropsten: {
-  		url: `https://eth-ropsten.alchemyapi.io/v2/N9hhfuCL7V9y5dXCD5AOddGs-zVIyYc4`,
+  		url: ``,
   		accounts: [``],
       gas: 4712388,
       gasPrice: 8000000000,
-  	},/*
-    rinkeby: {
-      url: 'https://eth-rinkeby.alchemyapi.io/v2/BOVIKDhtoiCIF42wVvj8LoaXF-Hictde',
-      accounts: [``]
-    },
-    mainnet: {
-      url: `https://eth-mainnet.alchemyapi.io/v2/Uo717K-DDAxlSM5gXM-zgv678k0aMZH5`,
-  		accounts: [``],
-      gas: 4712388,
-      gasPrice: 100000000000,
-    }
-    */
+  	},
    hardhat: {
      chainId: 1337
    },
@@ -61,7 +50,7 @@ export default {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: "8523JTUFNSHVP2F6HIN7BS1DJSWU4XJHDM"
+    apiKey: ""
   }
 };
 
